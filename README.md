@@ -232,6 +232,38 @@ Approvals stay per session. A rule you save with "don't ask again" lands in the 
 - **The jury's agents** are defined in `agents/*.md` with tool allowlists and deny lists. Each phase launches **fresh** agents, never resumed ones.
 - **The quote check** (`skills/huddle/quotecheck.py`) requires every chair quote, tagged `> [A] …`, to appear word for word in **that** member's text, and every member to be quoted, so a quote stitched from two members fails.
 
+The whole flow, one line per hop:
+
+```
+/huddle @a @b <mission>                    (or: /huddle · /huddle all · /huddle @a @b with no mission = connect only)
+   │
+   ├─ ListAgents (once) ──► pick members ──► print the list before sending anything
+   │
+   ├─ HELLO ────────────────► every peer ──► "joined"          templates/HELLO.md, rules 1–16 (security floor)
+   │
+   ├─ MISSION ──────────────► every peer ──► "mission read"    templates/MISSION.md, M1–M16 (collaboration layer)
+   │     └─ owner writes ~/huddle/<thread>/HUDDLE.md                                   [state: DESIGNING]
+   │
+   ├─ design round: ASK / ANSWER ──► challenge, name the alternative, concede on evidence (M2–M4)
+   │     └─ one side drafts, the other adopts word for word ──► both compute sha256
+   │              └─ 🐇 rabbit + hash printed in every session                          [state: AGREED]
+   │
+   ├─ Plan rows (steps, owners, tests, stop-ifs) + division of work in git worktrees (M7, M15)
+   │     └─ waits for the user's typed go ──► RELAY to=all, verbatim (M14)             [state: EXECUTING]
+   │
+   ├─ author builds + unit tests green ──► SYNC (M9) ──► REVIEW: non-author reads the WHOLE diff (M8)
+   │     └─ M16 gate: tests shown + deep review + owner marks the row done ──► sign-off log   [state: REVIEWING]
+   │
+   ├─ 3 rounds, nobody moved? (M11)
+   │     ├─ /huddle debate <point> ──► COMMIT (hash) ──► REVEAL ──► verify ──► rebut ──► chair ──► quotecheck ──► sign-off
+   │     └─ /huddle jury [lite|full] <proposal> ──► sealed agents: blind pass ──► verify ──► rebuttal ──► chair ──► quotecheck ──► sign-off
+   │
+   └─ /huddle done ──► DONE to=all ──► 5-line summary with message and character counts [state: DONE]
+
+Any keyboard, any time:   user types ──► that session sends RELAY to=all ──► the room hears it once
+                          /huddle status ──► prints HUDDLE.md     /huddle halt ──► HALT nonce=<x>, everyone pauses
+```
+
 ## Why not just ask one session?
 
 Sometimes you should: for trivial, reversible or obvious calls, one careful answer is cheaper and just as good, and the jury says so and stops. But one model on its own agrees with itself. huddle makes it argue with a peer that read the same diff, checks the facts, and shows you where the disagreement is.
