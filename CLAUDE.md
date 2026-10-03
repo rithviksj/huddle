@@ -10,7 +10,7 @@ It began as `conclave` (two skills, `session-comms` and `counsel`). v0.3 merged 
 |---|---|---|
 | `skills/huddle/SKILL.md` | the skill: argument router, connect flow, mission flow, debate flow, jury flow, approvals note, limits | initiator-only duties live here; never restate a rule that lives in a template |
 | `skills/huddle/templates/HELLO.md` | the security floor, rules 1 to 16, sent to every peer on connect | the single source for those rules; after any edit run `python3 tests/build-agents.py` |
-| `skills/huddle/templates/MISSION.md` | the collaboration layer, rules M1 to M16, sent after the joins when there is a mission | same: single source; rebuild the test agents after any edit |
+| `skills/huddle/templates/MISSION.md` | the collaboration layer, rules M1 to M18, sent after the joins when there is a mission | same: single source; rebuild the test agents after any edit |
 | `skills/huddle/templates/HUDDLE.md` | template of the shared status file (Mission, Goals, Pairing status, Consensus, Plan, Division of work, Decisions, Sign-off log, Updates) | one writer per thread: the owner |
 | `skills/huddle/templates/message.md`, `channel-README.md` | header schema; channel folder layout (hash-pinned) | keep in step with HELLO rule 6 and 12 |
 | `skills/huddle/canary.py` | proves the jury agents' tool locks from transcript evidence; run before the first jury on a machine and after any Claude Code upgrade | about USD 0.25 |
@@ -31,7 +31,7 @@ Install: copy `skills/huddle/` to `~/.claude/skills/huddle/` and `agents/huddle-
    │
    ├─ HELLO ────────────────► every peer ──► "joined"          templates/HELLO.md, rules 1–16 (security floor)
    │
-   ├─ MISSION ──────────────► every peer ──► "mission read"    templates/MISSION.md, M1–M16 (collaboration layer)
+   ├─ MISSION ──────────────► every peer ──► "mission read"    templates/MISSION.md, M1–M18 (collaboration layer)
    │     └─ owner writes ~/huddle/<thread>/HUDDLE.md                                   [state: DESIGNING]
    │
    ├─ design round: ASK / ANSWER ──► challenge, name the alternative, concede on evidence (M2–M4)
@@ -44,13 +44,14 @@ Install: copy `skills/huddle/` to `~/.claude/skills/huddle/` and `agents/huddle-
    ├─ author builds + unit tests green ──► SYNC (M9) ──► REVIEW: non-author reads the WHOLE diff (M8)
    │     └─ M16 gate: tests shown + deep review + owner marks the row done ──► sign-off log   [state: REVIEWING]
    │
-   ├─ 3 rounds, nobody moved? (M11)
-   │     ├─ /huddle debate <point> ──► COMMIT (hash) ──► REVEAL ──► verify ──► rebut ──► chair ──► quotecheck ──► sign-off
+   ├─ contested point (M11) ──► debate starts BY ITSELF · or anyone types /huddle debate <proposal>
+   │     ├─ COMMIT (hash) ──► REVEAL ──► verify ──► rebut ──► chair ──► quotecheck ──► sign-off (M12)
    │     └─ /huddle jury [lite|full] <proposal> ──► sealed agents: blind pass ──► verify ──► rebuttal ──► chair ──► quotecheck ──► sign-off
    │
    └─ /huddle done ──► DONE to=all ──► 5-line summary with message and character counts [state: DONE]
 
 Any keyboard, any time:   user types ──► that session sends RELAY to=all ──► the room hears it once
+                          user asks "A or B?" ──► RELAY ──► members answer in-thread ──► the window returns ONE answer, dissents in their own words (M17)
                           /huddle status ──► prints HUDDLE.md     /huddle halt ──► HALT nonce=<x>, everyone pauses
 ```
 

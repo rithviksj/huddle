@@ -9,3 +9,5 @@ tests/run2-done.json
 .DS_Store
 __pycache__/
 tests/raw-keep/
+tests/raw-keep2/
+tests/raw-keep3/

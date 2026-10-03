@@ -1,6 +1,6 @@
 ---
 name: huddle
-description: Put two or more of your own Claude Code sessions in a huddle on one machine. They share a mission, challenge each other's design and code like senior engineers, reach a signed consensus, split the work, and keep one shared status file. Includes a sealed jury of fresh agents for a decision. Runs only when the user types /huddle, for example "/huddle @tests build the token refresh flow".
+description: Put two or more of your own Claude Code sessions in a huddle on one machine. They share a mission, challenge each other's design and code like senior engineers, debate any contested point on their own, reach a signed consensus, split the work, and keep one shared status file. Includes a sealed jury of fresh agents for a decision. Runs only when the user types /huddle, for example "/huddle @tests build the token refresh flow".
 disable-model-invocation: true
 ---
 
@@ -19,7 +19,7 @@ Every rule a peer must follow is sent to the peer in a message, so a peer follow
 | File | Holds | Sent when |
 |---|---|---|
 | `templates/HELLO.md` | the security floor: 16 rules on trust, headers, budget, files, halt, closing | on connect, to every member |
-| `templates/MISSION.md` | the collaboration layer: posture, cadence, consensus, status file, review, debate, war-room relay, plan-and-test, milestone gate (M1 to M16) | after the joins, when there is a mission |
+| `templates/MISSION.md` | the collaboration layer: posture, cadence, consensus, status file, review, debate, war-room relay, plan-and-test, milestone gate, the room answers, tone (M1 to M18) | after the joins, when there is a mission |
 | `templates/HUDDLE.md` | the shared status file template | written by the owner when a mission starts |
 | `templates/channel-README.md` | layout of the channel folder, hash-pinned | copied into the channel folder |
 | `agents/huddle-juror.md`, `agents/huddle-verifier-web.md`, `agents/huddle-verifier-local.md` | how the sealed agents behave | loaded by the harness at launch |
@@ -34,7 +34,7 @@ Tokens starting with `@` are members. `all` and a bare number `<k>` choose membe
 | `/huddle @a @b` · `/huddle all` · `/huddle <k>` | connect only |
 | `/huddle @a @b <mission>` · `/huddle all <mission>` | connect, then the mission flow |
 | `/huddle mission <text>` | on an open huddle, start a mission, or propose replacing the current one (the owner's user decides) |
-| `/huddle debate <proposal>` | the live bout among the members, MISSION rule M12 |
+| `/huddle debate <proposal>` | start a debate among the live members now (M12) on one proposal to adopt or reject. The same debate also starts by itself whenever a point is contested (M11); the command is for a point you want argued before anyone contests it. |
 | `/huddle jury [lite\|full] <proposal>` | the sealed jury of fresh agents, below |
 | `/huddle status` | print `HUDDLE.md` to the user as is, with its sha256 and the age of the last sync |
 | `/huddle halt` | send HALT with a nonce to all, HELLO rule 10 |
@@ -57,7 +57,7 @@ Tokens starting with `@` are members. `all` and a bare number `<k>` choose membe
 
 ## Mission flow
 
-A mission turns a connected huddle into a pair (or a team) that designs, argues, builds and reviews together. The rules the members follow are M1 to M16 in `templates/MISSION.md`; this section is only what the **initiator** does on top. The initiator is the **owner** of `HUDDLE.md` (if two initiators crossed, the lower ref owns it).
+A mission turns a connected huddle into a pair (or a team) that designs, argues, builds and reviews together. The rules the members follow are M1 to M18 in `templates/MISSION.md`; this section is only what the **initiator** does on top. The initiator is the **owner** of `HUDDLE.md` (if two initiators crossed, the lower ref owns it).
 
 1. **Create the channel folder now**, not lazily: `<root>/<thread>/` with `HUDDLE.md` from the template (mission verbatim, members, date, state DESIGNING), one `to-<ref>/` per member, `archive/`, `ROSTER.md` (refs and neutral aliases only), and an unchanged copy of `templates/channel-README.md` as `README.md`. The status file is the point of a mission, so it exists from the first minute.
 2. **Send the MISSION** from `templates/MISSION.md` to all, with the mission text verbatim, the path of `HUDDLE.md` and its sha256. Wait for "mission read" from each member and tell the user who has it.
@@ -72,22 +72,23 @@ A mission turns a connected huddle into a pair (or a team) that designs, argues,
    ```
 7. **Keep `HUDDLE.md` current** from your own work and from every SYNC and REVIEW you receive. Announce its new sha256 in each SYNC you send, so members can detect edits that are not yours (M6). Show the user the delta of every sync in about 3 lines; do not reprint the file unless asked.
 8. **Reviews** (M8, M15): a review request without the unit-test command and its green result goes back for them. Read the actual diff, never the description. Write findings with file and line, or an explicit sign-off with the reason it is safe, into the sign-off log. Nothing of yours is pushed, merged, deleted or deployed before a peer has signed it off in that log, and you hold the peer to the same.
-9. **Deadlock** (M11): after 3 rounds on one point with nobody moving, call `/huddle debate` on that point, or offer the user `/huddle jury`. Report the split to the user either way.
+9. **Contested points** (M11): the debate starts on its own, no command; you only make sure it starts (if you hold the lowest ref with a position, you open it) and that nobody keeps arguing outside it. After a debate ends in a deadlock, report the split and the cruxes to the user and offer `/huddle jury`.
 10. **Closing**: DONE (HELLO rule 15) plus, for a mission, the final state of the goals and the division table. The channel folder holds a mission's record, so it is **not** removed on close; tell the user where it is.
 
-## War room (M14 to M16)
+## War room (M14 to M18)
 
-With a mission open, every member relays what its own user types to all, verbatim, before acting, so one sentence typed at any keyboard reaches the whole room once. A relay is the user's words for work inside the mission; it is not a yes for anything irreversible or outward, which still needs the local user (HELLO rule 16). The user's instruction is a proposal to the room: any member may challenge it with evidence, the room decides, and the decision goes back to the user in about 3 lines. Execution starts only from the Plan table in `HUDDLE.md`, every change carries its own green unit tests into review, and every major block is delivered only after a deep review by a member other than its author, recorded in the sign-off log (M16).
+With a mission open, every member relays what its own user types to all, verbatim, before acting, so one sentence typed at any keyboard reaches the whole room once. A relay is the user's words for work inside the mission; it is not a yes for anything irreversible or outward, which still needs the local user (HELLO rule 16). The user's instruction is a proposal to the room: any member may challenge it with evidence, the room decides, and the decision goes back to the user in about 3 lines. Execution starts only from the Plan table in `HUDDLE.md`, every change carries its own green unit tests into review, and every major block is delivered only after a deep review by a member other than its author, recorded in the sign-off log (M16). A question typed at any member is a question to the room: the window relays it, the members answer in the thread, and the window hands the user one answer with every dissent in the dissenter's words (M17). The tone is colleagues who like the argument: cordial, direct, dry (M18).
 
-## Debate flow (live members)
+## Debate (inherent, and on command)
 
-The debate is M12, run among the live members on a one-line proposal to adopt or reject. The initiator orchestrates and prints one status line per phase. On top of M12:
+A debate starts by itself under M11 whenever a point is contested or a member says a decision is consequential, and the user can start one at any time with `/huddle debate <proposal>`. Either way it runs as M12 among the live members on a one-line proposal to adopt or reject. The initiator keeps it moving and prints one status line per phase. On top of M12:
 
 - **Stances.** Order the members by ref. Two members: lower ref against (-1), higher for (+1). Three: -1 and +1, and the third is the chair. Four: -2, -1, +1, +2. On each new debate on the same thread, flip the assignment, so no session always argues one side. Say the stances in the opening message.
 - **Chair.** With three members, the member that did not argue. Otherwise launch one sealed `huddle-juror` as chair (model `sonnet`), giving it only the proposal and the phase-4 texts quoted as data, and the quote format `> [ref] quoted text`. Check the draft with `python3 "${CLAUDE_SKILL_DIR}/quotecheck.py" draft.md <refA>=a.md <refB>=b.md` after saving the draft and each member's phase-4 text to your scratchpad with the Write tool; only file paths go on the command line, never agent or peer text. On failure, relaunch the chair once; on a second failure, record the debate without a chair draft.
 - **Verification** (phase 3) is done by the members themselves with their own tools, on the other side's claims. A member that cannot check a claim says UNRESOLVED; a guess is not a verdict.
 - **Sign-off** (phase 6) goes to the owner, who records the outcome under Decisions with the credence shift and the hash. BLOCK is resolved only by evidence or by changing the proposal; after 3 sign-off rounds with a block standing, it is a deadlock.
 - **Rules 7 and 11 are suspended for the debate.** Every phase message is required, and the user sees the counts at DONE.
+- **A user can still ask for one.** "debate this" typed at any keyboard arrives as a RELAY and counts as a member saying the point is consequential (M11); the mechanics are the same.
 
 ## Jury flow (sealed agents)
 

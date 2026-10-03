@@ -88,7 +88,7 @@ Add a sentence after the members and the huddle becomes a team on one goal: `/hu
 ```
 You ──"/huddle @peer <mission>"──▶ [Session A, owner of HUDDLE.md]
                                         │ HELLO (16 rules) ──▶ [Session B] ──▶ "joined"
-                                        │ MISSION (M1–M16) ──▶ [Session B] ──▶ "mission read"
+                                        │ MISSION (M1–M18) ──▶ [Session B] ──▶ "mission read"
                                         ▼
    you type at either keyboard ──▶ RELAY to all ──▶ challenge · plan · consensus (🐇 + sha256)
                                         │
@@ -101,7 +101,7 @@ You ──"/huddle @peer <mission>"──▶ [Session A, owner of HUDDLE.md]
 
 ### Debate: the members argue it out
 
-`/huddle debate <one proposal>` runs rule M12 among the live members:
+A debate starts by itself whenever a point is contested (rule M11), and `/huddle debate <one proposal>` starts one on demand. Either way it runs rule M12 among the live members:
 
 - **Commit and reveal:** each member writes its honest credence, reasons and claims, sends only the sha256, and reveals the text once every commit is in. A mismatch voids the debate
 - **Stances by ref order**, flipped on each new debate, so no session always argues one side
@@ -144,7 +144,7 @@ One command opens an iTerm tab that starts `/huddle jury`. It only ever types on
 | `/huddle @a @b` · `/huddle all` · `/huddle 2` | connect only |
 | `/huddle @a @b <mission>` · `/huddle all <mission>` | connect, then the mission flow |
 | `/huddle mission <text>` | start a mission on an open huddle, or propose replacing it |
-| `/huddle debate <proposal>` | the live bout among the members |
+| `/huddle debate <proposal>` | start a debate among the live members now; the same debate also starts by itself on a contested point (M11) |
 | `/huddle jury [lite\|full] <proposal>` | the sealed jury |
 | `/huddle status` | prints `HUDDLE.md` with its sha256 and the age of the last sync |
 | `/huddle halt` | HALT with a nonce to all |
@@ -213,7 +213,7 @@ claude --permission-mode manual --strict-mcp-config --mcp-config '{"mcpServers":
 /rename backend                                   # in each session; neutral names, no personal identifiers
 /huddle @tests                                    # plain connect
 /huddle @tests @docs build the token refresh flow # mission: relay, plan, tests, gated delivery
-/huddle debate adopt jittered backoff over fixed  # live bout on one proposal
+/huddle debate adopt jittered backoff over fixed  # start a debate now; contested points also debate by themselves
 /huddle jury lite <one proposal>                  # 2 jurors, ~8 agent calls
 /huddle status                                    # the shared HUDDLE.md
 /huddle done
@@ -226,7 +226,7 @@ Approvals stay per session. A rule you save with "don't ask again" lands in the 
 ## How it works
 
 - **Transport** is Claude Code's own: `ListAgents` finds sessions, and `SendMessage` delivers over per-session owner-only sockets with inbound hold and refuse. huddle adds conventions, not plumbing.
-- **Two rulebooks travel in messages.** The HELLO carries the security floor (rules 1 to 16); the MISSION carries the collaboration layer (M1 to M16). A peer without the skill installed still receives both.
+- **Two rulebooks travel in messages.** The HELLO carries the security floor (rules 1 to 16); the MISSION carries the collaboration layer (M1 to M18). A peer without the skill installed still receives both.
 - **Senders are matched** by mapping the session name to its ref via `ListAgents`. If a ref changes (restart or rename), that sender is untrusted until a new HELLO.
 - **`HUDDLE.md`** lives in the channel folder under `~/huddle/<thread>/`, is written only by the owner, and is re-readable after a context compaction. It is the mission's record and is not deleted on close.
 - **The jury's agents** are defined in `agents/*.md` with tool allowlists and deny lists. Each phase launches **fresh** agents, never resumed ones.
@@ -241,7 +241,7 @@ The whole flow, one line per hop:
    │
    ├─ HELLO ────────────────► every peer ──► "joined"          templates/HELLO.md, rules 1–16 (security floor)
    │
-   ├─ MISSION ──────────────► every peer ──► "mission read"    templates/MISSION.md, M1–M16 (collaboration layer)
+   ├─ MISSION ──────────────► every peer ──► "mission read"    templates/MISSION.md, M1–M18 (collaboration layer)
    │     └─ owner writes ~/huddle/<thread>/HUDDLE.md                                   [state: DESIGNING]
    │
    ├─ design round: ASK / ANSWER ──► challenge, name the alternative, concede on evidence (M2–M4)
@@ -254,13 +254,14 @@ The whole flow, one line per hop:
    ├─ author builds + unit tests green ──► SYNC (M9) ──► REVIEW: non-author reads the WHOLE diff (M8)
    │     └─ M16 gate: tests shown + deep review + owner marks the row done ──► sign-off log   [state: REVIEWING]
    │
-   ├─ 3 rounds, nobody moved? (M11)
-   │     ├─ /huddle debate <point> ──► COMMIT (hash) ──► REVEAL ──► verify ──► rebut ──► chair ──► quotecheck ──► sign-off
+   ├─ contested point (M11) ──► debate starts BY ITSELF · or anyone types /huddle debate <proposal>
+   │     ├─ COMMIT (hash) ──► REVEAL ──► verify ──► rebut ──► chair ──► quotecheck ──► sign-off (M12)
    │     └─ /huddle jury [lite|full] <proposal> ──► sealed agents: blind pass ──► verify ──► rebuttal ──► chair ──► quotecheck ──► sign-off
    │
    └─ /huddle done ──► DONE to=all ──► 5-line summary with message and character counts [state: DONE]
 
 Any keyboard, any time:   user types ──► that session sends RELAY to=all ──► the room hears it once
+                          user asks "A or B?" ──► RELAY ──► members answer in-thread ──► the window returns ONE answer, dissents in their own words (M17)
                           /huddle status ──► prints HUDDLE.md     /huddle halt ──► HALT nonce=<x>, everyone pauses
 ```
 
