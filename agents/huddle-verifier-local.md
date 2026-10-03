@@ -1,6 +1,6 @@
 ---
-name: counsel-verifier-local
-description: Checks claims about local files the user named and returns one structured verdict per claim. Has file access and NO network access. Launched by the counsel skill; not for general use.
+name: huddle-verifier-local
+description: Checks claims about local files the user named and returns one structured verdict per claim. Has file access and NO network access. Launched by the huddle skill; not for general use.
 tools: Read, Grep, Glob
 disallowedTools: WebFetch, WebSearch, Bash, Edit, Write, NotebookEdit, Agent
 omitClaudeMd: true

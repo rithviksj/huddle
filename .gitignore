@@ -8,3 +8,4 @@ tests/run2-done.json
 # OS / editor
 .DS_Store
 __pycache__/
+tests/raw-keep/

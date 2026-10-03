@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""counsel canary: prove each counsel agent's tool locks hold, from transcript evidence.
+"""huddle canary: prove each huddle jury agent's tool locks hold, from transcript evidence.
 
 Usage: canary.py [AGENTS_DIR]     (default: ~/.claude/agents, else the repo's agents/ folder)
 
 Four nested `claude -p` sessions (Haiku, dontAsk, no MCP connectors, no Chrome) each launch ONE subagent:
-  probe-all (no restrictions, POSITIVE CONTROL) and the three counsel agents, each built from its REAL
+  probe-all (no restrictions, POSITIVE CONTROL) and the three jury agents, each built from its REAL
   frontmatter, byte for byte, with a NEUTRAL body (the real bodies say "you have no tools", which would
   make a zero-call result meaningless). Five probes: A read a random-token file, B fetch example.com,
   C ToolSearch select:SendMessage, D SendMessage to a made-up recipient (reaches no session), E Skill with
@@ -22,12 +22,12 @@ import shutil
 import subprocess
 import sys
 
-AGENTS = ["counsel-member", "counsel-verifier-web", "counsel-verifier-local"]
+AGENTS = ["huddle-juror", "huddle-verifier-web", "huddle-verifier-local"]
 EXPECT = {  # probe -> reached?
     "probe-all": dict(A=True, B=True, C=True, D=True, E=True),
-    "counsel-member": dict(A=False, B=False, C=False, D=False, E=False),
-    "counsel-verifier-web": dict(A=False, B=True, C=False, D=False, E=False),
-    "counsel-verifier-local": dict(A=True, B=False, C=False, D=False, E=False),
+    "huddle-juror": dict(A=False, B=False, C=False, D=False, E=False),
+    "huddle-verifier-web": dict(A=False, B=True, C=False, D=False, E=False),
+    "huddle-verifier-local": dict(A=True, B=False, C=False, D=False, E=False),
 }
 TOOL_OF = dict(A={"Read"}, B={"WebFetch", "WebSearch"}, C={"ToolSearch"}, D={"SendMessage"}, E={"Skill"})
 BODY = ("You perform the requested probes using ONLY tools you actually have. "
@@ -39,7 +39,7 @@ def find_agents_dir(arg):
     for d in ([arg] if arg else []) + [os.path.expanduser("~/.claude/agents"), os.path.join(here, "..", "..", "agents")]:
         if d and all(os.path.isfile(os.path.join(d, a + ".md")) for a in AGENTS):
             return os.path.abspath(d)
-    sys.exit("canary: cannot find the three counsel-*.md agent files")
+    sys.exit("canary: cannot find the three huddle-*.md agent files")
 
 
 def frontmatter(text):
@@ -55,7 +55,7 @@ def txt(x):
 
 def main():
     src = find_agents_dir(sys.argv[1] if len(sys.argv) > 1 else None)
-    root = "/tmp/counsel-canary-" + secrets.token_hex(4)
+    root = "/tmp/huddle-canary-" + secrets.token_hex(4)
     proj = root + "/proj"
     os.makedirs(proj + "/.claude/agents")
     token = "canary-" + secrets.token_hex(12)

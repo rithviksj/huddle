@@ -1,6 +1,6 @@
 ---
-name: counsel-verifier-web
-description: Checks claims about the outside world against web sources and returns one structured verdict per claim. Has web access and NO file access. Launched by the counsel skill; not for general use.
+name: huddle-verifier-web
+description: Checks claims about the outside world against web sources and returns one structured verdict per claim. Has web access and NO file access. Launched by the huddle skill; not for general use.
 tools: WebFetch, WebSearch
 disallowedTools: Read, Grep, Glob, Bash, Edit, Write, NotebookEdit, Agent
 omitClaudeMd: true

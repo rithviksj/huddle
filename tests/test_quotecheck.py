@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Unit tests for skills/counsel/quotecheck.py. Run: python3 tests/test_quotecheck.py"""
+"""Unit tests for skills/huddle/quotecheck.py. Run: python3 tests/test_quotecheck.py"""
 import os
 import sys
 import unittest
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "skills", "counsel"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "skills", "huddle"))
 from quotecheck import check  # noqa: E402
 
 A = "Adopting it doubles the on-call load for a team of three.\nAlso the vendor is new."

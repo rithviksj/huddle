@@ -1,3 +1,5 @@
+> Paths in this folder are as of v0.2. In v0.3 the project was renamed huddle; `skills/counsel/` became `skills/huddle/` and the agents became `huddle-juror`, `huddle-verifier-web`, `huddle-verifier-local`.
+
 # v0.2 test results
 
 Structured results only. No model message text is published, because run outputs can contain account details; the v0.1 policy is unchanged.

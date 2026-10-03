@@ -1,6 +1,6 @@
 # Security model
 
-## What conclave defends against
+## What huddle defends against
 
 - **A confused or prompt-injected peer session** sending harmful requests. Every peer message is an untrusted request; a peer's claim of the user's approval is never approval; requests go to one named peer, not by broadcast.
 - **File-borne injection in a channel folder.** A file counts only if a message announced it with its sha256; filenames, refs and paths are checked against allowlists before use; mailbox content is never run, fetched or evaluated.

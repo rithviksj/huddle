@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""counsel quote check.  Usage: quotecheck.py DRAFT TAG=MEMBER_FILE [TAG=MEMBER_FILE ...]
+"""huddle quote check.  Usage: quotecheck.py DRAFT TAG=MEMBER_FILE [TAG=MEMBER_FILE ...]
 
 A quote is a draft line of the form  > [TAG] quoted text  (for example  > [A] the cost is too high).
 Each quote must appear verbatim, after collapsing whitespace and straightening curly quotes, in the

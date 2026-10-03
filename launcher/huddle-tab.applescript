@@ -1,6 +1,6 @@
 -- Opens one new iTerm tab (or a window, if none is open) and types the command it is given.
 -- Defense in depth: this file refuses any command other than the three constants that
--- launch-counsel.sh can choose, so calling it directly cannot type arbitrary text into a terminal.
+-- launch-huddle-jury.sh can choose, so calling it directly cannot type arbitrary text into a terminal.
 on run argv
 	set cmd to item 1 of argv
 	-- Layer 1: ASCII printable only. AppleScript text comparison treats Unicode look-alikes
@@ -9,14 +9,14 @@ on run argv
 	set codes to id of cmd
 	if class of codes is integer then set codes to {codes}
 	repeat with c in codes
-		if c < 32 or c > 126 then error "counsel-tab: refusing a non-ASCII or control character" number 1
+		if c < 32 or c > 126 then error "huddle-tab: refusing a non-ASCII or control character" number 1
 	end repeat
 	-- Layer 2: compare the numeric code points, not the text, against the three constants.
 	set allowed to false
-	repeat with okCmd in {"claude \"/counsel\"", "claude \"/counsel full\"", "claude"}
+	repeat with okCmd in {"claude \"/huddle jury\"", "claude \"/huddle jury full\"", "claude"}
 		if codes = (id of (contents of okCmd)) then set allowed to true
 	end repeat
-	if not allowed then error "counsel-tab: refusing an unexpected command" number 1
+	if not allowed then error "huddle-tab: refusing an unexpected command" number 1
 	tell application "iTerm"
 		activate
 		if (count of windows) = 0 then
