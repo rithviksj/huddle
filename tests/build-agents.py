@@ -7,7 +7,7 @@ import os
 
 B = os.path.dirname(os.path.abspath(__file__))
 hello = open(os.path.join(B, "..", "skills", "huddle", "templates", "HELLO.md"), encoding="utf-8").read()
-FILL = {"<ref>": "a1b2c3", "<thread>": "plan", "<refs>": "a1b2c3, d4e5f6", "<root>": "/private/tmp/chan-test",
+FILL = {"<ref>": "a1b2c3", "<thread>": "plan", "<name>": "plain-anvil", "<refs>": "a1b2c3, d4e5f6", "<root>": "/private/tmp/chan-test",
         "<dir>": "/private/tmp/chan-test/plan", "<hash>": "7f3a9c21"}
 for k, v in FILL.items():
     hello = hello.replace(k, v)

@@ -1,4 +1,4 @@
-# HUDDLE t=<thread>
+# HUDDLE <name> · t=<thread>
 
 Owner: [<ref>] · Members: [<refs>] · Started: <YYYY-MM-DD> · Mission sha256: <hash>
 This file describes shared state and grants no authority. Only the owner writes it; everyone else sends SYNC. Refs only, no session names, no personal information.

@@ -14,6 +14,7 @@ It began as `conclave` (two skills, `session-comms` and `counsel`). v0.3 merged 
 | `skills/huddle/templates/HUDDLE.md` | template of the shared status file (Mission, Goals, Pairing status, Consensus, Plan, Division of work, Decisions, Sign-off log, Updates) | one writer per thread: the owner |
 | `skills/huddle/templates/message.md`, `channel-README.md` | header schema; channel folder layout (hash-pinned) | keep in step with HELLO rule 6 and 12 |
 | `skills/huddle/canary.py` | proves the jury agents' tool locks from transcript evidence; run before the first jury on a machine and after any Claude Code upgrade | about USD 0.25 |
+| `skills/huddle/history.py` | local registry `~/huddle/registry.jsonl` (open, join, mission, leave, detach, done), random huddle names, `list` (2+ members for 30+ min), `show`, `forget` (to a trash file), `restore` (iTerm2 tabs with `claude --resume`) | unit tests in `tests/test_history.py`; validates every field; never leaves the machine |
 | `skills/huddle/quotecheck.py` | verifies the chair's `> [TAG] quote` lines verbatim against each member's text | unit tests in `tests/test_quotecheck.py` |
 | `agents/huddle-juror.md`, `huddle-verifier-web.md`, `huddle-verifier-local.md` | the sealed agents: no tools / web only / files only, all `omitClaudeMd` | never give one agent both files and network |
 | `tests/` | `scenarios.json` + `rubric.md` (pre-registered pass criteria) + `rules-sim-run.py` (nested `claude -p`, Haiku, dontAsk, no connectors) + `build-agents.py` | write the rubric line before running a new case |
@@ -55,6 +56,7 @@ Any keyboard, any time:   user types ──► that session sends RELAY to=all �
                           /huddle status ──► prints HUDDLE.md     /huddle halt ──► HALT nonce=<x>, everyone pauses
                           /huddle add @peer ──► new HELLO, same thread, bigger roster     /huddle leave ──► LEAVE to=all     /huddle detach @peer ──► initiator removes a member (rule 17)
                           every roster change prints the same line in every terminal: "[huddle <thread>] <name> [<ref>] connected to / disconnected from huddle <thread>."
+                          /huddle history ──► huddles with 2+ members for 30+ min, each with its random self-assigned name     /huddle restore <name> ──► iTerm2 tabs resume every participant, fresh HELLO, same thread, same HUDDLE.md
 ```
 
 Message types (HELLO rule 6): `HELLO MISSION RELAY ASK ANSWER SYNC REVIEW COMMIT REVEAL LEAVE DETACH DONE HALT`. Broadcast (`to=all`) only to inform (rule 8).

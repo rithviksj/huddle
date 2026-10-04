@@ -146,6 +146,8 @@ One command opens an iTerm tab that starts `/huddle jury`. It only ever types on
 | `/huddle mission <text>` | start a mission on an open huddle, or propose replacing it |
 | `/huddle debate <proposal>` | start a debate among the live members now; the same debate also starts by itself on a contested point (M11) |
 | `/huddle jury [lite\|full] <proposal>` | the sealed jury |
+| `/huddle history` · `/huddle history all` · `/huddle history forget <name>` | past huddles with 2+ members for 30+ minutes, each with a random self-assigned name; forget removes one (to a local trash file) |
+| `/huddle restore <name>` | iTerm2 only: one tab per participant resumes its session in its working directory, then a fresh HELLO on the same thread and the same `HUDDLE.md` |
 | `/huddle status` | prints `HUDDLE.md` with its sha256 and the age of the last sync |
 | `/huddle add @peer` | initiator only: add a session to the open thread with a new HELLO on the same thread (rule 17) |
 | `/huddle leave` | detach this session from the thread; LEAVE to all, then silence (rule 17) |
@@ -268,6 +270,7 @@ Any keyboard, any time:   user types ──► that session sends RELAY to=all �
                           /huddle status ──► prints HUDDLE.md     /huddle halt ──► HALT nonce=<x>, everyone pauses
                           /huddle add @peer ──► new HELLO, same thread, bigger roster     /huddle leave ──► LEAVE to=all     /huddle detach @peer ──► initiator removes a member (rule 17)
                           every roster change prints the same line in every terminal: "[huddle <thread>] <name> [<ref>] connected to / disconnected from huddle <thread>."
+                          /huddle history ──► huddles with 2+ members for 30+ min, each with its random self-assigned name     /huddle restore <name> ──► iTerm2 tabs resume every participant, fresh HELLO, same thread, same HUDDLE.md
 ```
 
 ## Why not just ask one session?
