@@ -9,7 +9,7 @@ It began as `conclave` (two skills, `session-comms` and `counsel`). v0.3 merged 
 | Path | What it is | Edit rule |
 |---|---|---|
 | `skills/huddle/SKILL.md` | the skill: argument router, connect flow, mission flow, debate flow, jury flow, approvals note, limits | initiator-only duties live here; never restate a rule that lives in a template |
-| `skills/huddle/templates/HELLO.md` | the security floor, rules 1 to 16, sent to every peer on connect | the single source for those rules; after any edit run `python3 tests/build-agents.py` |
+| `skills/huddle/templates/HELLO.md` | the security floor, rules 1 to 17, sent to every peer on connect | the single source for those rules; after any edit run `python3 tests/build-agents.py` |
 | `skills/huddle/templates/MISSION.md` | the collaboration layer, rules M1 to M18, sent after the joins when there is a mission | same: single source; rebuild the test agents after any edit |
 | `skills/huddle/templates/HUDDLE.md` | template of the shared status file (Mission, Goals, Pairing status, Consensus, Plan, Division of work, Decisions, Sign-off log, Updates) | one writer per thread: the owner |
 | `skills/huddle/templates/message.md`, `channel-README.md` | header schema; channel folder layout (hash-pinned) | keep in step with HELLO rule 6 and 12 |
@@ -29,7 +29,7 @@ Install: copy `skills/huddle/` to `~/.claude/skills/huddle/` and `agents/huddle-
    │
    ├─ ListAgents (once) ──► pick members ──► print the list before sending anything
    │
-   ├─ HELLO ────────────────► every peer ──► "joined"          templates/HELLO.md, rules 1–16 (security floor)
+   ├─ HELLO ────────────────► every peer ──► "joined"          templates/HELLO.md, rules 1–17 (security floor)
    │
    ├─ MISSION ──────────────► every peer ──► "mission read"    templates/MISSION.md, M1–M18 (collaboration layer)
    │     └─ owner writes ~/huddle/<thread>/HUDDLE.md                                   [state: DESIGNING]
@@ -53,9 +53,11 @@ Install: copy `skills/huddle/` to `~/.claude/skills/huddle/` and `agents/huddle-
 Any keyboard, any time:   user types ──► that session sends RELAY to=all ──► the room hears it once
                           user asks "A or B?" ──► RELAY ──► members answer in-thread ──► the window returns ONE answer, dissents in their own words (M17)
                           /huddle status ──► prints HUDDLE.md     /huddle halt ──► HALT nonce=<x>, everyone pauses
+                          /huddle add @peer ──► new HELLO, same thread, bigger roster     /huddle leave ──► LEAVE to=all     /huddle detach @peer ──► initiator removes a member (rule 17)
+                          every roster change prints the same line in every terminal: "[huddle <thread>] <name> [<ref>] connected to / disconnected from huddle <thread>."
 ```
 
-Message types (HELLO rule 6): `HELLO MISSION RELAY ASK ANSWER SYNC REVIEW COMMIT REVEAL DONE HALT`. Broadcast (`to=all`) only to inform (rule 8).
+Message types (HELLO rule 6): `HELLO MISSION RELAY ASK ANSWER SYNC REVIEW COMMIT REVEAL LEAVE DETACH DONE HALT`. Broadcast (`to=all`) only to inform (rule 8).
 
 ## The trust model in four lines
 

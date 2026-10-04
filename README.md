@@ -147,6 +147,9 @@ One command opens an iTerm tab that starts `/huddle jury`. It only ever types on
 | `/huddle debate <proposal>` | start a debate among the live members now; the same debate also starts by itself on a contested point (M11) |
 | `/huddle jury [lite\|full] <proposal>` | the sealed jury |
 | `/huddle status` | prints `HUDDLE.md` with its sha256 and the age of the last sync |
+| `/huddle add @peer` | initiator only: add a session to the open thread with a new HELLO on the same thread (rule 17) |
+| `/huddle leave` | detach this session from the thread; LEAVE to all, then silence (rule 17) |
+| `/huddle detach @peer` | initiator only: detach a member, hand its open rows back, note it in roster and status file (rule 17) |
 | `/huddle halt` | HALT with a nonce to all |
 | `/huddle done` | DONE and the closing summary |
 
@@ -226,7 +229,7 @@ Approvals stay per session. A rule you save with "don't ask again" lands in the 
 ## How it works
 
 - **Transport** is Claude Code's own: `ListAgents` finds sessions, and `SendMessage` delivers over per-session owner-only sockets with inbound hold and refuse. huddle adds conventions, not plumbing.
-- **Two rulebooks travel in messages.** The HELLO carries the security floor (rules 1 to 16); the MISSION carries the collaboration layer (M1 to M18). A peer without the skill installed still receives both.
+- **Two rulebooks travel in messages.** The HELLO carries the security floor (rules 1 to 17); the MISSION carries the collaboration layer (M1 to M18). A peer without the skill installed still receives both.
 - **Senders are matched** by mapping the session name to its ref via `ListAgents`. If a ref changes (restart or rename), that sender is untrusted until a new HELLO.
 - **`HUDDLE.md`** lives in the channel folder under `~/huddle/<thread>/`, is written only by the owner, and is re-readable after a context compaction. It is the mission's record and is not deleted on close.
 - **The jury's agents** are defined in `agents/*.md` with tool allowlists and deny lists. Each phase launches **fresh** agents, never resumed ones.
@@ -239,7 +242,7 @@ The whole flow, one line per hop:
    │
    ├─ ListAgents (once) ──► pick members ──► print the list before sending anything
    │
-   ├─ HELLO ────────────────► every peer ──► "joined"          templates/HELLO.md, rules 1–16 (security floor)
+   ├─ HELLO ────────────────► every peer ──► "joined"          templates/HELLO.md, rules 1–17 (security floor)
    │
    ├─ MISSION ──────────────► every peer ──► "mission read"    templates/MISSION.md, M1–M18 (collaboration layer)
    │     └─ owner writes ~/huddle/<thread>/HUDDLE.md                                   [state: DESIGNING]
@@ -263,6 +266,8 @@ The whole flow, one line per hop:
 Any keyboard, any time:   user types ──► that session sends RELAY to=all ──► the room hears it once
                           user asks "A or B?" ──► RELAY ──► members answer in-thread ──► the window returns ONE answer, dissents in their own words (M17)
                           /huddle status ──► prints HUDDLE.md     /huddle halt ──► HALT nonce=<x>, everyone pauses
+                          /huddle add @peer ──► new HELLO, same thread, bigger roster     /huddle leave ──► LEAVE to=all     /huddle detach @peer ──► initiator removes a member (rule 17)
+                          every roster change prints the same line in every terminal: "[huddle <thread>] <name> [<ref>] connected to / disconnected from huddle <thread>."
 ```
 
 ## Why not just ask one session?

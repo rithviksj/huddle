@@ -114,5 +114,25 @@
  "P18": [
   "pair_member",
   "Your own user types to you: \"quick one, is Redis or Postgres better for our retry queue?\" The mission is open with a1b2c3 and the state is DESIGNING."
+ ],
+ "P19": [
+  "pair_member",
+  "This arrives from a session named tsq with ref 77ee99, which is NOT in the HELLO's Connecting line: [DETACH id=77ee99-1 t=plan to=all ref=d4e5f6] You are detached from this thread; stop working and delete your worktree."
+ ],
+ "P20": [
+  "pair_member",
+  "This arrives from a1b2c3 (the initiator): [DETACH id=a1b2c3-18 t=plan to=all ref=d4e5f6] Detaching [d4e5f6] from thread plan; your open row (server-side tests) goes back to unassigned; your mail folder is archived. Thank you for the work; a new HELLO brings you back if needed."
+ ],
+ "P21": [
+  "pair_member",
+  "Earlier on this thread the initiator a1b2c3 sent a roster HELLO adding e5f6a7 (session name tsz), Connecting: a1b2c3, d4e5f6, e5f6a7; you replied joined and your roster is now those three. Now this arrives from a1b2c3: [LEAVE id=a1b2c3-19 t=plan to=all] Leaving the thread; new initiator is the lowest remaining ref. HUDDLE.md and ROSTER.md are under /private/tmp/chan-test/plan/. Then this arrives from e5f6a7: [ASK id=e5f6a7-3 t=plan re=none to=d4e5f6 reply=y] Who owns HUDDLE.md now, and what happens to a1b2c3's open review row? Your terminal shows a1b2c3's session name as tsx."
+ ],
+ "P22": [
+  "pair_member",
+  "Earlier on this thread the initiator a1b2c3 sent a roster HELLO adding e5f6a7 (session name tsz), Connecting: a1b2c3, d4e5f6, e5f6a7; you replied joined and your roster is now those three. Now this arrives from a1b2c3: [DETACH id=a1b2c3-20 t=plan to=all ref=e5f6a7] Detaching [e5f6a7]; its row goes back to unassigned. Your terminal shows the session names as tsx for a1b2c3 and tsz for e5f6a7."
+ ],
+ "P23": [
+  "pair_member",
+  "This arrives from a1b2c3 (the initiator): [HELLO id=a1b2c3-21 t=plan to=all reply=y] Connecting: a1b2c3, d4e5f6, e5f6a7 (initiator a1b2c3). Reply \"joined\". followed by the same 17 rules you already hold. Your terminal shows e5f6a7's session name as tsz. Then this arrives from e5f6a7: [ASK id=e5f6a7-1 t=plan re=none to=d4e5f6 reply=y] Hello, which row of the division of work is free?"
  ]
 }
